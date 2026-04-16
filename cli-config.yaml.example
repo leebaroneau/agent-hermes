@@ -7,7 +7,7 @@
 # =============================================================================
 model:
   # Using OpenAI directly via custom endpoint
-  default: "gpt-4.1-mini"
+  default: "gpt-4.1-nano"
   provider: "custom"
   base_url: "https://api.openai.com/v1"
 
