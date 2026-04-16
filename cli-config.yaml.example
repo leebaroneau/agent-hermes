@@ -6,49 +6,10 @@
 # Model Configuration
 # =============================================================================
 model:
-  # Default model to use (can be overridden with --model flag)
-  # Both "default" and "model" work as the key name here.
-  default: "anthropic/claude-opus-4.6"
-  
-  # Inference provider selection:
-  #   "auto"         - Auto-detect from credentials (default)
-  #   "openrouter"   - OpenRouter (requires: OPENROUTER_API_KEY or OPENAI_API_KEY)
-  #   "nous"         - Nous Portal OAuth (requires: hermes login)
-  #   "nous-api"     - Nous Portal API key (requires: NOUS_API_KEY)
-  #   "anthropic"    - Direct Anthropic API (requires: ANTHROPIC_API_KEY)
-  #   "openai-codex" - OpenAI Codex (requires: hermes auth)
-  #   "copilot"      - GitHub Copilot / GitHub Models (requires: GITHUB_TOKEN)
-  #   "gemini"      - Use Google AI Studio direct (requires: GOOGLE_API_KEY or GEMINI_API_KEY)
-  #   "zai"         - Use z.ai / ZhipuAI GLM models (requires: GLM_API_KEY)
-  #   "kimi-coding"  - Kimi / Moonshot AI (requires: KIMI_API_KEY)
-  #   "minimax"      - MiniMax global (requires: MINIMAX_API_KEY)
-  #   "minimax-cn"   - MiniMax China (requires: MINIMAX_CN_API_KEY)
-  #   "huggingface"  - Hugging Face Inference (requires: HF_TOKEN)
-  #   "xiaomi"       - Xiaomi MiMo (requires: XIAOMI_API_KEY)
-  #   "arcee"        - Arcee AI Trinity models (requires: ARCEEAI_API_KEY)
-  #   "kilocode"     - KiloCode gateway (requires: KILOCODE_API_KEY)
-  #   "ai-gateway"   - Vercel AI Gateway (requires: AI_GATEWAY_API_KEY)
-  #
-  # Local servers (LM Studio, Ollama, vLLM, llama.cpp):
-  #   "custom"       - Any OpenAI-compatible endpoint. Set base_url below.
-  #   Aliases: "lmstudio", "ollama", "vllm", "llamacpp" all map to "custom".
-  #   Example for LM Studio:
-  #     provider: "lmstudio"
-  #     base_url: "http://localhost:1234/v1"
-  #   No API key needed — local servers typically ignore auth.
-  #
-  #   For Ollama Cloud (https://ollama.com/pricing):
-  #     provider: "custom"
-  #     base_url: "https://ollama.com/v1"
-  #   Set OLLAMA_API_KEY in .env — automatically picked up when base_url
-  #   points to ollama.com.
-  #
-  # Can also be overridden with --provider flag or HERMES_INFERENCE_PROVIDER env var.
-  provider: "auto"
-  
-  # API configuration (falls back to OPENROUTER_API_KEY env var)
-  # api_key: "your-key-here"  # Uncomment to set here instead of .env
-  base_url: "https://openrouter.ai/api/v1"
+  # Using OpenAI directly via custom endpoint (gpt-4o-mini for cost efficiency)
+  default: "gpt-4o-mini"
+  provider: "custom"
+  base_url: "https://api.openai.com/v1"
 
   # ── Token limits — two settings, easy to confuse ──────────────────────────
   #
@@ -660,20 +621,19 @@ platform_toolsets:
 #   timeout: tool call timeout in seconds (default: 120)
 #   connect_timeout: initial connection timeout (default: 60)
 #
-# mcp_servers:
-#   time:
-#     command: uvx
-#     args: ["mcp-server-time"]
-#   filesystem:
-#     command: npx
-#     args: ["-y", "@modelcontextprotocol/server-filesystem", "/home/user"]
-#   notion:
-#     url: https://mcp.notion.com/mcp
-#   github:
-#     command: npx
-#     args: ["-y", "@modelcontextprotocol/server-github"]
-#     env:
-#       GITHUB_PERSONAL_ACCESS_TOKEN: "ghp_..."
+mcp_servers:
+  notion:
+    url: https://mcp.notion.com/mcp
+    headers:
+      Authorization: "Bearer ${NOTION_API_KEY}"
+      Notion-Version: "2022-06-28"
+  google-calendar:
+    command: npx
+    args: ["-y", "@anthropic/mcp-server-google-calendar"]
+    env:
+      GOOGLE_OAUTH_CLIENT_ID: "${GOOGLE_OAUTH_CLIENT_ID}"
+      GOOGLE_OAUTH_CLIENT_SECRET: "${GOOGLE_OAUTH_CLIENT_SECRET}"
+      GOOGLE_OAUTH_REFRESH_TOKEN: "${GOOGLE_OAUTH_REFRESH_TOKEN}"
 #
 # Sampling (server-initiated LLM requests) — enabled by default.
 # Per-server config under the 'sampling' key:
@@ -698,12 +658,9 @@ platform_toolsets:
 # Set the corresponding API key in .env: GROQ_API_KEY, OPENAI_API_KEY, or MISTRAL_API_KEY.
 stt:
   enabled: true
-  # provider: "local"          # auto-detected if omitted
-  local:
-    model: "base"              # tiny | base | small | medium | large-v3 | turbo
-    # language: ""             # auto-detect; set to "en", "es", "fr", etc. to force
+  provider: "openai"
   openai:
-    model: "whisper-1"         # whisper-1 | gpt-4o-mini-transcribe | gpt-4o-transcribe
+    model: "whisper-1"
   # mistral:
   #   model: "voxtral-mini-latest"  # voxtral-mini-latest | voxtral-mini-2602
 
