@@ -6,8 +6,8 @@
 # Model Configuration
 # =============================================================================
 model:
-  # Using OpenAI directly via custom endpoint (gpt-4o-mini for cost efficiency)
-  default: "gpt-4o-mini"
+  # Using OpenAI directly via custom endpoint
+  default: "gpt-4.1-mini"
   provider: "custom"
   base_url: "https://api.openai.com/v1"
 
