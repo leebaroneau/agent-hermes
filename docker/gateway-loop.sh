@@ -14,7 +14,7 @@ echo "Starting Hermes gateway loop (retry every ${RETRY_DELAY}s on failure)..."
 
 while true; do
     echo "[$(date -Iseconds)] Starting gateway..."
-    hermes gateway start
+    hermes gateway run
     EXIT_CODE=$?
 
     if [ "$EXIT_CODE" -eq 0 ]; then
