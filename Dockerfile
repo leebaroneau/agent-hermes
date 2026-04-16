@@ -24,9 +24,8 @@ COPY --chmod=0755 --from=uv_source /usr/local/bin/uv /usr/local/bin/uvx /usr/loc
 COPY . /opt/hermes
 WORKDIR /opt/hermes
 
-# Install Node dependencies and Playwright as root (--with-deps needs apt)
+# Install Node dependencies (skip Playwright/Chromium — not needed for messaging gateway)
 RUN npm install --prefer-offline --no-audit && \
-    npx playwright install --with-deps chromium --only-shell && \
     cd /opt/hermes/scripts/whatsapp-bridge && \
     npm install --prefer-offline --no-audit && \
     npm cache clean --force
@@ -36,7 +35,7 @@ RUN chown -R hermes:hermes /opt/hermes
 USER hermes
 
 RUN uv venv && \
-    uv pip install --no-cache-dir -e ".[all]"
+    uv pip install --no-cache-dir -e ".[messaging,mcp,voice,cli]"
 
 USER root
 RUN chmod +x /opt/hermes/docker/entrypoint.sh /opt/hermes/docker/gateway-loop.sh

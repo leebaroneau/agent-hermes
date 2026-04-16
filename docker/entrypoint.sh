@@ -64,4 +64,9 @@ if [ -d "$INSTALL_DIR/skills" ]; then
     python3 "$INSTALL_DIR/tools/skills_sync.py"
 fi
 
-exec hermes "$@"
+# If CMD is an executable script, run it directly; otherwise pass to hermes CLI
+if [ -n "$1" ] && [ -x "$1" ]; then
+    exec "$@"
+else
+    exec hermes "$@"
+fi
