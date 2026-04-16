@@ -24,9 +24,9 @@ COPY --chmod=0755 --from=uv_source /usr/local/bin/uv /usr/local/bin/uvx /usr/loc
 COPY . /opt/hermes
 WORKDIR /opt/hermes
 
-# Install Node dependencies (skip Playwright/Chromium — not needed for messaging gateway)
-RUN npm install --prefer-offline --no-audit && \
-    cd /opt/hermes/scripts/whatsapp-bridge && \
+# Install only WhatsApp bridge Node deps (skip root npm install — it pulls
+# 2GB camoufox browser automation which isn't needed for messaging gateway)
+RUN cd /opt/hermes/scripts/whatsapp-bridge && \
     npm install --prefer-offline --no-audit && \
     npm cache clean --force
 
