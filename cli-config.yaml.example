@@ -627,13 +627,7 @@ mcp_servers:
     headers:
       Authorization: "Bearer ${NOTION_API_KEY}"
       Notion-Version: "2022-06-28"
-  google-calendar:
-    command: npx
-    args: ["-y", "@anthropic/mcp-server-google-calendar"]
-    env:
-      GOOGLE_OAUTH_CLIENT_ID: "${GOOGLE_OAUTH_CLIENT_ID}"
-      GOOGLE_OAUTH_CLIENT_SECRET: "${GOOGLE_OAUTH_CLIENT_SECRET}"
-      GOOGLE_OAUTH_REFRESH_TOKEN: "${GOOGLE_OAUTH_REFRESH_TOKEN}"
+  # google-calendar: TODO — find correct MCP server package and add OAuth credentials
 #
 # Sampling (server-initiated LLM requests) — enabled by default.
 # Per-server config under the 'sampling' key:
