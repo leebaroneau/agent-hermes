@@ -42,6 +42,15 @@ source "${INSTALL_DIR}/.venv/bin/activate"
 # ephemeral and shared across profiles.  See issue #4426.
 mkdir -p "$HERMES_HOME"/{cron,sessions,logs,hooks,memories,skills,skins,plans,workspace,home}
 
+# WhatsApp session path fix: the pairing CLI saves to $HERMES_HOME/whatsapp/session
+# but the gateway reads from $HERMES_HOME/platforms/whatsapp/session. Unify them
+# by making platforms/whatsapp/session a symlink to whatsapp/session.
+mkdir -p "$HERMES_HOME/whatsapp/session" "$HERMES_HOME/platforms"
+if [ ! -L "$HERMES_HOME/platforms/whatsapp" ]; then
+    rm -rf "$HERMES_HOME/platforms/whatsapp"
+    ln -s "$HERMES_HOME/whatsapp" "$HERMES_HOME/platforms/whatsapp"
+fi
+
 # .env — only seed once (runtime secrets should not be overwritten)
 if [ ! -f "$HERMES_HOME/.env" ]; then
     cp "$INSTALL_DIR/.env.example" "$HERMES_HOME/.env"
